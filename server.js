@@ -65,7 +65,12 @@ app.post('/webhook', async (req, res) => {
       if (String(entry.id) !== String(PAGE_ID)) continue;
       for (const ev of (entry.messaging || [])) {
         if (ev.message && ev.message.text && !ev.message.is_echo) {
+          logEv({ tipo: 'mensaje', psid: ev.sender.id, texto: String(ev.message.text).slice(0, 60) });
           await responder(ev.sender.id, ev.message.text);
+        } else if (ev.message && ev.message.is_echo) {
+          logEv({ tipo: 'echo', psid: ev.sender.id, texto: String(ev.message.text || '').slice(0, 60) });
+        } else {
+          logEv({ tipo: 'otro', psid: ev.sender ? ev.sender.id : null, keys: Object.keys(ev).join(',') });
         }
       }
     }
@@ -81,9 +86,9 @@ async function enviarText(psid, texto) {
       { recipient: { id: psid }, message: { text: texto } },
       { headers: { 'Content-Type': 'application/json' } }
     );
-    console.log('enviado a', psid, ':', texto.slice(0, 60));
+    logEv({ tipo: 'envio_ok', psid, resp: texto.slice(0, 60) });
   } catch (e) {
-    console.error('envio falló', e.response ? JSON.stringify(e.response.data) : e.message);
+    logEv({ tipo: 'envio_fallo', psid, error: e.response ? JSON.stringify(e.response.data).slice(0, 200) : e.message });
   }
 }
 
