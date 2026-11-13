@@ -34,7 +34,7 @@ const TEMAS = [
   { re: /garant[ií]a|garantia|defecto|fallo/i, resp: (n) => `${n}, las máquinas se entregan verificadas y funcionando. Le mostramos su operación antes de la entrega para que quede tranquilo con su compra.` },
   { re: /medida|dimensi[oó]n|dimens|tama[nñ]o|peso|ancho|alto|largo/i, resp: (n) => `${n}, le confirmo las medidas exactas de la máquina que le interesa. ¿Cuál es el modelo que está viendo?` },
   { re: /env[ií]o|envio|domicilio|entrega|transport/i, resp: (n) => `${n}, hacemos entregas en Bogotá y coordinamos envíos a otras ciudades. Le confirmamos el costo exacto según su dirección.` },
-  { re: /horario|abierto|atienden|atencion|atención/i, resp: (n) => `${n}, puede visitarnos en ${INFO.direccion}. Le confirma un asesor el día y la hora que le acomoden.` },
+  { re: /horario|abren|atienden|atencion|atención/i, resp: (n) => `${n}, puede visitarnos en ${INFO.direccion}. Le confirma un asesor el día y la hora que le acomoden.` },
 ];
 
 const ESPERA = (n) => `${n}, su solicitud quedó recibida y en unos minutos le confirma un asesor por aquí mismo.`;
