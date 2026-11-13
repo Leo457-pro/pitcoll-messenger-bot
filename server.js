@@ -11,6 +11,13 @@ const VERIFY_TOKEN = process.env.VERIFY_TOKEN || 'pitcoll-verify-2026';
 const PAGE_ID = process.env.PAGE_ID || '1338437609353128';
 const PORT = process.env.PORT || 3000;
 
+// Log en memoria de eventos recibidos (consultable en /logs)
+const LOGS = [];
+function logEv(obj) {
+  LOGS.push(Object.assign({ t: new Date().toISOString() }, obj));
+  if (LOGS.length > 200) LOGS.shift();
+}
+
 // ---- Datos de la empresa ----
 const INFO = {
   tel: '333 640 3814',
@@ -50,6 +57,7 @@ app.get('/webhook', (req, res) => {
 // ---- Recepcion de mensajes ----
 app.post('/webhook', async (req, res) => {
   res.sendStatus(200); // confirmar rapido a Meta
+  logEv({ tipo: 'POST', object: req.body ? req.body.object : null, entradas: req.body && req.body.entry ? req.body.entry.length : 0 });
   try {
     const body = req.body;
     if (body.object !== 'page') return;
@@ -100,4 +108,5 @@ async function responder(psid, texto) {
 }
 
 app.get('/', (req, res) => res.send('PITCOLL bot OK'));
+app.get('/logs', (req, res) => res.json({ total: LOGS.length, eventos: LOGS }));
 app.listen(PORT, () => console.log('PITCOLL webhook activo en puerto', PORT));
